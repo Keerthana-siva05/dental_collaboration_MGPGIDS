@@ -216,7 +216,7 @@ const ResourcesPage = () => {
           
           {/* Upload Form */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-12 mt-12">
-            <div className="bg-gradient-to-r from-blue-900 to-indigo-700 px-6 py-4">
+            <div className="bg-gradient-to-r from-blue-900 to-indigo-700 px-6 py-4 mt-10">
               <h2 className="text-xl font-semibold text-white">Upload New Resource</h2>
             </div>
             

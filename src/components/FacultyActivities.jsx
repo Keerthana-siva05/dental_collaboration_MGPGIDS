@@ -153,7 +153,7 @@ const FacultyActivities = () => {
         <div className="max-w-6xl mx-auto">
           {/* Centered Header Section */}
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Faculty Activities</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2 mt-5">Faculty Activities</h1>
             {facultyName && (
               <div className="inline-block px-6 py-2 bg-blue-50 rounded-full">
                 <p className="text-lg font-medium text-blue-800">{facultyName}</p>
