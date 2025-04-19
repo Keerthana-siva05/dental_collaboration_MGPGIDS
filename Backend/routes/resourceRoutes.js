@@ -133,4 +133,45 @@ router.get('/', async (req, res) => {
       });
     }
   });
+  // Add this route in resourceRoutes.js before the export
+router.delete('/:id', protectFaculty, async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id);
+    
+    if (!resource) {
+      return res.status(404).json({
+        success: false,
+        message: 'Resource not found'
+      });
+    }
+
+    // Check if the requesting faculty uploaded the resource
+    if (resource.uploadedBy.toString() !== req.faculty._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to delete this resource'
+      });
+    }
+
+    // Delete the file from the filesystem
+    if (fs.existsSync(resource.filePath)) {
+      fs.unlinkSync(resource.filePath);
+    }
+
+    await Resource.deleteOne({ _id: req.params.id });
+
+    res.json({
+      success: true,
+      message: 'Resource deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting resource',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
 export { router as default };

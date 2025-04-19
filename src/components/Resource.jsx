@@ -162,16 +162,21 @@ const ResourcesPage = () => {
       navigate('/login');
       return;
     }
-
+  
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:5000/api/resources/${id}`, {
+      const response = await axios.delete(`http://localhost:5000/api/resources/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setResources(prev => prev.filter(resource => resource._id !== id));
-      setSuccess('Resource deleted successfully');
+      
+      if (response.data.success) {
+        setResources(prev => prev.filter(resource => resource._id !== id));
+        setSuccess('Resource deleted successfully');
+      } else {
+        throw new Error(response.data.message || 'Failed to delete resource');
+      }
     } catch (err) {
       console.error('Delete error:', err);
       if (err.response?.status === 401) {
@@ -434,18 +439,18 @@ const ResourcesPage = () => {
                           </div>
                         </div>
                         <div className="mt-3 sm:mt-0 sm:ml-4 flex space-x-2">
-                          <a
-                            href={`http://localhost:5000/${resource.filePath}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
-                          >
-                            <svg className="-ml-0.5 mr-1.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View
-                          </a>
+                        <a
+  href={`http://localhost:5000/uploads/${resource.filePath.split('uploads/').pop()}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
+>
+  <svg className="-ml-0.5 mr-1.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+  View
+</a>
                           <button
                             onClick={() => handleDelete(resource._id)}
                             className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition disabled:opacity-50"
